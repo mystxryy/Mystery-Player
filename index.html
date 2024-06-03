@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins';
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        .content {
+            box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                -6px -6px 10px -1px rgba(255, 255, 255, 0.1);
+            width: 350px;
+            border-radius: 15px;
+            height: 620px;
+            padding: 25px 30px;
+            background-color: #2d2d2d;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .material-symbols-rounded {
+            cursor: pointer;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 18px;
+        }
+
+        .top-bar .material-symbols-rounded {
+            font-size: 24px;
+        }
+
+        .music-image {
+            width: 230px;
+            height: 230px;
+            box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                -6px -6px 10px -1px rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin-top: 25px;
+            padding: 7px;
+        }
+
+        .music-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .image-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .music-titles {
+            text-align: center;
+            margin: 30px 0;
+            color: #ffffff;
+        }
+
+        .music-titles .name {
+            font-size: 19px;
+        }
+
+        .music-titles .artist {
+            font-size: 17px;
+            margin-top: 3px;
+            opacity: 0.9;
+        }
+
+        .progress-details {
+            width: 100%;
+            height: 6px;
+            background-color: #4d4d4d;
+            border-radius: 15px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: inherit;
+            border-radius: inherit;
+            background-color: #0987f6;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar span {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #0987f6;
+            border-radius: inherit;
+            transform: translateY(-25%);
+            right: -5px;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .progress-details:hover .progress-bar span {
+            opacity: 1;
+        }
+
+        .time {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 2px;
+            color: #ffffff;
+        }
+
+        .control-btn {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-btn span {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                -6px -6px 10px -1px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+        }
+
+        .control-btn span:active {
+            box-shadow: inset 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+                inset -6px -6px 10px -1px rgba(255, 255, 255, 0.1);
+        }
+
+        .volume-control {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .volume-bar-container {
+            position: absolute;
+            top: 40px;
+            display: none;
+            z-index: 1000;
+            transition: all 0.3s ease-out;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .volume-bar-container.active {
+            display: block;
+        }
+
+        #volume-slider {
+            left: 100%;
+        }
+
+        .top-bar,
+        .image-wrapper,
+        .music-titles,
+        .progress-details,
+        .control-btn,
+        .volume-control {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .volhover {
+            transition: all 0.3s ease-out;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .volhover:hover {
+            transform: translateY(-5px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(1.3);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>Mystery Player</title>
+</head>
+
+<body>
+    <div class="content">
+        <div class="top-bar">
+            <span class="material-symbols-rounded">expand_more</span>
+            <span>Mysteryy</span>
+            <span class="material-symbols-rounded">more_horiz</span>
+        </div>
+        <div class="image-wrapper">
+            <div class="music-image">
+                <img src="images/img1.jpg">
+            </div>
+        </div>
+        <div class="music-titles">
+            <p class="name">6 Shots - NEFFEX</p>
+            <p class="artist">NEFFEX</p>
+        </div>
+        <div class="progress-details">
+            <div class="progress-bar">
+                <span></span>
+            </div>
+            <div class="time">
+                <span class="current">0:00</span>
+                <span class="final">5:30</span>
+            </div>
+        </div>
+        <div class="control-btn">
+            <span class="material-symbols-rounded" id="repeat">repeat</span>
+            <span class="material-symbols-rounded" id="prev">skip_previous</span>
+            <div class="play-pause">
+                <span class="material-symbols-rounded">play_arrow</span>
+            </div>
+            <span class="material-symbols-rounded" id="next">skip_next</span>
+            <span class="material-symbols-rounded" id="shuffle">shuffle</span>
+        </div>
+        <div class="volume-control">
+            <span class="material-symbols-rounded volhover" id="volume-icon">volume_up</span>
+            <div class="volume-bar-container" id="volume-bar-container">
+                <input type="range" min="0" max="1" step="0.01" value="1" id="volume-slider">
+            </div>
+        </div>
+    </div>
+
+    <audio src="songs/Chemtrails Over The Country Club.mp3" class="main-song"></audio>
+
+    <script>
+        const content = document.querySelector(".content"),
+            Playimage = content.querySelector(".music-image img"),
+            musicName = content.querySelector(".music-titles .name"),
+            musicArtist = content.querySelector(".music-titles .artist"),
+            Audio = document.querySelector(".main-song"),
+            playBtn = content.querySelector(".play-pause"),
+            playBtnIcon = content.querySelector(".play-pause span"),
+            prevBtn = content.querySelector("#prev"),
+            nextBtn = content.querySelector("#next"),
+            progressBar = content.querySelector(".progress-bar"),
+            progressDetails = content.querySelector(".progress-details"),
+            repeatBtn = content.querySelector("#repeat"),
+            Shuffle = content.querySelector("#shuffle"),
+            playlistBtn = content.querySelector("button");
+
+        let index = 1;
+
+        window.addEventListener("load", () => {
+            loadData(index);
+        });
+
+        function loadData(indexValue) {
+            musicName.innerHTML = songs[indexValue - 1].name;
+            musicArtist.innerHTML = songs[indexValue - 1].artist;
+            Playimage.src = "images/" + songs[indexValue - 1].img;
+            Audio.src = 'songs/' + songs[indexValue - 1].audio;
+        }
+
+        playBtn.addEventListener("click", () => {
+            const isMusicPaused = content.classList.contains("paused");
+            if (isMusicPaused) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        });
+
+        function playSong() {
+            content.classList.add("paused");
+            playBtnIcon.innerHTML = "pause";
+            Audio.play();
+        }
+
+        function pauseSong() {
+            content.classList.remove("paused");
+            playBtnIcon.innerHTML = "play_arrow";
+            Audio.pause();
+        }
+
+        nextBtn.addEventListener("click", () => {
+            nextSong();
+        });
+
+        prevBtn.addEventListener("click", () => {
+            prevSong();
+        });
+
+        function nextSong() {
+            index++;
+            if (index > songs.length) {
+                index = 1;
+            } else {
+                index = index;
+            }
+            loadData(index);
+            playSong();
+        }
+
+        function prevSong() {
+            index--;
+            if (index <= 0) {
+                index = songs.length;
+            } else {
+                index = index;
+            }
+            loadData(index);
+            playSong();
+        }
+
+        Audio.addEventListener("timeupdate", (e) => {
+            const initialTime = e.target.currentTime; 
+            const finalTime = e.target.duration; 
+            let BarWidth = (initialTime / finalTime) * 100;
+            progressBar.style.width = BarWidth + "%";
+
+            progressDetails.addEventListener("click", (e) => {
+                let progressValue = progressDetails.clientWidth;
+                let clickedOffsetX = e.offsetX; 
+                let MusicDuration = Audio.duration;
+
+                Audio.currentTime = (clickedOffsetX / progressValue) * MusicDuration;
+            });
+
+            Audio.addEventListener("loadeddata", () => {
+                let finalTimeData = content.querySelector(".final");
+
+                let AudioDuration = Audio.duration;
+                let finalMinutes = Math.floor(AudioDuration / 60);
+                let finalSeconds = Math.floor(AudioDuration % 60);
+                if (finalSeconds < 10) {
+                    finalSeconds = "0" + finalSeconds;
+                }
+                finalTimeData.innerText = finalMinutes + ":" + finalSeconds;
+            });
+
+            let currentTimeData = content.querySelector(".current");
+            let CurrentTime = Audio.currentTime;
+            let currentMinutes = Math.floor(CurrentTime / 60);
+            let currentSeconds = Math.floor(CurrentTime % 60);
+            if (currentSeconds < 10) {
+                currentSeconds = "0" + currentSeconds;
+            }
+            currentTimeData.innerText = currentMinutes + ":" + currentSeconds;
+
+            repeatBtn.addEventListener("click", () => {
+                Audio.currentTime = 0;
+            });
+        });
+
+        Shuffle.addEventListener("click", () => {
+            var randIndex = Math.floor(Math.random() * songs.length) + 1; 
+            loadData(randIndex);
+            playSong();
+        });
+
+        Audio.addEventListener("ended", () => {
+            index++;
+            if (index > songs.length) {
+                index = 1;
+            }
+            loadData(index);
+            playSong();
+        });
+
+        function togglePlaylist() {
+            const playlist = document.querySelector("#playlist");
+            if (playlist.style.display === "none" || !playlist.style.display) {
+                playlist.style.display = "block";
+            } else {
+                playlist.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        let songs = [
+            {
+                name: "Breaking Up Slowly",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Breaking Up Slowly.mp3"
+            },
+            {
+                name: "Chemtrails Over The Country Club",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Chemtrails Over The Country Club.mp3"
+            },
+            {
+                name: "Dance Till We Die",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Dance Till We Die.mp3"
+            },
+            {
+                name: "Dark But Just A Game",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Dark But Just A Game.mp3"
+            },
+            {
+                name: "For Free",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "For Free.mp3"
+            },
+            {
+                name: "I Was Never There",
+                artist: "The Weeknd",
+                img: "1.jpg",
+                audio: "I Was Never There.mp3"
+            },
+            {
+                name: "Let Me Love You Like A Woman",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Let Me Love You Like A Woman.mp3"
+            },
+            {
+                name: "Not All Who Wander Are Lost",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Not All Who Wander Are Lost.mp3"
+            },
+            {
+                name: "Tulsa Jesus Freak",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Tulsa Jesus Freak.mp3"
+            },
+            {
+                name: "White Dress",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "White Dress.mp3"
+            },
+            {
+                name: "Wild At Heart",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Wild At Heart.mp3"
+            },
+            {
+                name: "Yosemite",
+                artist: "Lana Del Rey",
+                img: "2.jpg",
+                audio: "Yosemite.mp3"
+            },
+            {
+                name: "TIL FURTHER NOTICE",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "TIL FURTHER NOTICE.mp3"
+            },
+            {
+                name: "TELEKINESIS",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "TELEKINESIS.mp3"
+            },
+            {
+                name: "DELRESTO",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "DELRESTO.mp3"
+            },
+            {
+                name: "K-POP",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "K-POP.mp3"
+            },
+            {
+                name: "LOOOVE",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "LOOOVE.mp3"
+            },
+            {
+                name: "LOST FOREVER",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "LOST FOREVER.mp3"
+            },
+            {
+                name: "I-KNOW",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "I-KNOW.mp3"
+            },
+            {
+                name: "SKITZO",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "SKITZO.mp3"
+            },
+            {
+                name: "PARSAIL",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "PARSAIL.mp3"
+            },
+            {
+                name: "CIRCUS-MAXIMUS",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "CIRCUS-MAXIMUS.mp3"
+            },
+            {
+                name: "FE!N",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "FE!N.mp3"
+            },
+            {
+                name: "MODERN-JAM",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "MODERN-JAM.mp3"
+            },
+            {
+                name: "SIRENS",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "SIRENS.mp3"
+            },
+            {
+                name: "MY EYES",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "MY EYES.mp3"
+            },
+            {
+                name: "GODS COUNTRY",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "GODS COUNTRY.mp3"
+            },
+            {
+                name: "MELTDOWN",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "MELTDOWN.mp3"
+            },
+            {
+                name: "HYAENA",
+                artist: "Travis Scott",
+                img: "4.jpg",
+                audio: "HYAENA.mp3"
+            },
+            {
+                name: "Attention",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Attention.mp3"
+            },
+            {
+                name: "One Call Away",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "One Call Away.mp3"
+            },
+            {
+                name: "Dangerously",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Dangerously.mp3"
+            },
+            {
+                name: "Marvin Gaye",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Marvin Gaye.mp3"
+            },
+            {
+                name: "Losing My Mind",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Losing My Mind.mp3"
+            },
+            {
+                name: "We Dont Talk Anymore",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "We Dont Talk Anymore.mp3"
+            },
+            {
+                name: "The Gospel",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "The Gospel.mp3"
+            },
+            {
+                name: "Then Theres You",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Then Theres You.mp3"
+            },
+            {
+                name: "Some Type of Love",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Some Type of Love.mp3"
+            },
+            {
+                name: "Left Right Left",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Left Right Left.mp3"
+            },
+            {
+                name: "As You Are",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "As You Are.mp3"
+            },
+            {
+                name: "Suffer",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Suffer.mp3"
+            },
+            {
+                name: "Up All Night",
+                artist: "Charlie Puth",
+                img: "5.jpg",
+                audio: "Up All Night.mp3"
+            },
+
+        ]
+    </script>
+    <script>
+        const volumeIcon = document.getElementById('volume-icon');
+        const volumeBarContainer = document.getElementById('volume-bar-container');
+        const volumeSlider = document.getElementById('volume-slider');
+        const audio = document.querySelector(".main-song");
+
+        volumeIcon.addEventListener('click', () => {
+            volumeBarContainer.classList.toggle('active');
+        });
+
+        volumeSlider.addEventListener('input', () => {
+            audio.volume = volumeSlider.value;
+        });
+
+    </script>
+</body>
+
+</html>
